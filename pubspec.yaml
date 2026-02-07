@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   pdfrx: ^1.0.8
   google_fonts: ^6.2.1
-  lucide_icons: ^0.321.0
+  lucide_icons_flutter: ^3.1.9
   share_plus: ^10.1.4
   path_provider: ^2.1.2
   url_launcher: ^6.2.5
