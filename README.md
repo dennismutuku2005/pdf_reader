@@ -7,10 +7,13 @@ A premium, fast, and native-looking PDF reader for Flutter. Built for performanc
 - 🚀 **Fast Rendering**: Powered by native PDF engines for smooth performance.
 - 🎨 **Modern UI**: Clean, native-looking interface with Lucide icons and Inter typography.
 - 🌓 **Dark Mode**: Built-in support for light and dark themes.
+- 🔍 **Text Search**: Full-text search with navigation between results.
+- 📑 **Table of Contents**: Support for PDF outlines/bookmarks.
+- 🔢 **Page Navigation**: Quick jump to any page by tapping the page indicator.
 - 🔍 **Zoom Controls**: Easy pinch-to-zoom and explicit zoom controls.
-- 📄 **Page Navigation**: Quick page indicator and navigation.
 - 📤 **Share**: Easy document sharing built-in.
 - 🔗 **Link Support**: Clickable links within PDF documents.
+- 📱 **Full Screen**: Toggle UI visibility with a single tap for immersive reading.
 
 ## Getting Started
 
