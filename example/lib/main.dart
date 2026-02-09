@@ -33,29 +33,55 @@ class HomePage extends StatelessWidget {
         title: const Text('PDF Reader Example'),
       ),
       body: Center(
-        child: ElevatedButton.icon(
-          onPressed: () async {
-            FilePickerResult? result = await FilePicker.platform.pickFiles(
-              type: FileType.custom,
-              allowedExtensions: ['pdf'],
-            );
-
-            if (result != null) {
-              final path = result.files.single.path!;
-              if (context.mounted) {
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton.icon(
+              onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => PdfReaderView(filePath: path),
+                    builder: (context) => const PdfReaderView(
+                      filePath: 'assets/edgar.pdf',
+                      isAsset: true,
+                      title: 'Edgar Statistical Info',
+                    ),
                   ),
                 );
-              }
-            }
-          },
-          icon: const Icon(Icons.file_open),
-          label: const Text('Open PDF File'),
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          ),
+              },
+              icon: const Icon(Icons.analytics),
+              label: const Text('Open Edgar PDF (Asset)'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                backgroundColor: Colors.deepPurple,
+                foregroundColor: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: () async {
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ['pdf'],
+                );
+
+                if (result != null) {
+                  final path = result.files.single.path!;
+                  if (context.mounted) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PdfReaderView(filePath: path),
+                      ),
+                    );
+                  }
+                }
+              },
+              icon: const Icon(Icons.file_open),
+              label: const Text('Open Custom PDF'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+            ),
+          ],
         ),
       ),
     );
