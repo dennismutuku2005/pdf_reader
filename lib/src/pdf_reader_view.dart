@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons_flutter/lucide_icons_flutter.dart';
 import 'package:pdfrx/pdfrx.dart';
@@ -8,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class PdfReaderView extends StatefulWidget {
   final String filePath;
+  final bool isAsset;
   final String? title;
   final Color? primaryColor;
   final bool showAppBar;
@@ -17,6 +19,7 @@ class PdfReaderView extends StatefulWidget {
   const PdfReaderView({
     super.key,
     required this.filePath,
+    this.isAsset = false,
     this.title,
     this.primaryColor,
     this.showAppBar = true,
@@ -77,36 +80,35 @@ class _PdfReaderViewState extends State<PdfReaderView> {
                   ),
                   IconButton(
                     icon: const Icon(LucideIcons.share2, size: 20),
-                    onPressed: () => Share.shareXFiles([XFile(widget.filePath)]),
+                    onPressed: () async {
+                      String path = widget.filePath;
+                      if (widget.isAsset) {
+                        // Copy asset to temp file for sharing
+                        final byteData = await DefaultAssetBundle.of(context).load(widget.filePath);
+                        final tempDir = await getTemporaryDirectory();
+                        final tempFile = File('${tempDir.path}/shared_doc.pdf');
+                        await tempFile.writeAsBytes(byteData.buffer.asUint8List());
+                        path = tempFile.path;
+                      }
+                      await Share.shareXFiles([XFile(path)]);
+                    },
                   ),
                 ],
               )
             : null,
         body: Stack(
           children: [
-            PdfViewer.file(
-              widget.filePath,
-              controller: countController,
-              params: PdfViewerParams(
-                backgroundColor: backgroundColor,
-                onDocumentChanged: (document) {
-                  setState(() {
-                    _totalPages = document?.pages.length ?? 0;
-                  });
-                },
-                onPageChanged: (pageNumber) {
-                  setState(() {
-                    _currentPage = pageNumber ?? 1;
-                  });
-                },
-                enableTextSelection: true,
-                maxScale: 5.0,
-                viewerOverlayBuilder: (context, size) => [
-                  // Optional overlay widgets
-                ],
-                onLinkTap: (url) => launchUrl(Uri.parse(url!)),
-              ),
-            ),
+            widget.isAsset
+                ? PdfViewer.asset(
+                    widget.filePath,
+                    controller: countController,
+                    params: _buildParams(backgroundColor),
+                  )
+                : PdfViewer.file(
+                    widget.filePath,
+                    controller: countController,
+                    params: _buildParams(backgroundColor),
+                  ),
             if (widget.showBottomBar)
               Positioned(
                 bottom: 24,
@@ -165,6 +167,25 @@ class _PdfReaderViewState extends State<PdfReaderView> {
           ],
         ),
       ),
+    );
+  }
+
+  PdfViewerParams _buildParams(Color backgroundColor) {
+    return PdfViewerParams(
+      backgroundColor: backgroundColor,
+      onDocumentChanged: (document) {
+        setState(() {
+          _totalPages = document?.pages.length ?? 0;
+        });
+      },
+      onPageChanged: (pageNumber) {
+        setState(() {
+          _currentPage = pageNumber ?? 1;
+        });
+      },
+      enableTextSelection: true,
+      maxScale: 5.0,
+      onLinkTap: (url) => launchUrl(Uri.parse(url!)),
     );
   }
 
