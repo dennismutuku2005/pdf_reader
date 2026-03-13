@@ -16,7 +16,6 @@ A premium, fast, and native-looking PDF reader for Flutter. Built for performanc
 - 📱 **Full Screen**: Toggle UI visibility with a single tap for immersive reading.
 
 ## Getting Started
-
 Add the dependency to your `pubspec.yaml`:
 
 ```yaml
